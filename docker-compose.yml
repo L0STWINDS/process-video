@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  process-video:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: process-video
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./main.py:/app/main.py
+      - /mnt/hdd/docker/temp:/app/temp
+    environment:
+      - TEMP_DIR=/app/temp
+      - ASR_API_BASE_URL=http://192.168.22.104:9997/v1
+      - ASR_API_KEY=not empty
+      - ASR_MODEL=SenseVoiceSmall
+      - FILE_ACCESS_BASE_URL=http://192.168.22.103:8000/files

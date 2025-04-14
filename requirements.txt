@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+aiohttp
+pydantic
+pydantic-settings
+ffmpeg-python
+moviepy
+tenacity
+openai

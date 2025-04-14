@@ -1,0 +1,39 @@
+# Python缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 虚拟环境
+.env
+.venv
+env/
+venv/
+ENV/
+.conda/
+
+# 临时文件和处理结果
+temp/
+!temp/_tasks_record/.gitkeep
+
+# 日志文件
+*.log
+
+# 本地配置文件
+1panel.env
+.env.local
+.env.*.local
+
+# IDE相关
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# Docker相关
+.docker/
