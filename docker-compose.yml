@@ -14,6 +14,7 @@ services:
       - ./main.py:/app/main.py
       - /mnt/hdd/docker/temp:/app/temp
     environment:
+      - TZ=Asia/Shanghai
       - TEMP_DIR=/app/temp
       - ASR_API_BASE_URL=http://192.168.22.104:9997/v1
       - ASR_API_KEY=not empty
