@@ -25,3 +25,27 @@
 ```bash
 docker-compose up -d
 ```
+
+## 示例
+指定采样起始时间和间隔时间（秒）
+```curl
+curl --request POST \
+  --url http://127.0.0.1:8000/api/process-video \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "url": "http://127.0.0.1:5244/d/MP4/video.mp4",
+  "start_seconds": "300",
+  "interval_seconds": "300",
+  "max_frames": "10"
+}'
+```
+不指定采样起始时间和间隔时间，将自动计算采样间隔（视频时长/(max_frames+1)）
+```curl
+curl --request POST \
+  --url http://127.0.0.1:8000/api/process-video \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "url": "http://127.0.0.1:5244/d/MP4/video.mp4",
+  "max_frames": "10"
+}'
+```
