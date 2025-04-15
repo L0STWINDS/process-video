@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  process-video:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: process-video
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./main.py:/app/main.py
+      # 根据你的磁盘情况修改
+      - /mnt/hdd/docker/temp:/app/temp
+    environment:
+      - TZ=Asia/Shanghai
+      - TEMP_DIR=/app/temp
+      # 根据你的接口修改
+      - ASR_API_BASE_URL=http://openai_api_server/v1
+      - ASR_API_KEY=not empty
+      - ASR_MODEL=SenseVoiceSmall
+      # 根据你的服务器地址修改
+      - FILE_ACCESS_BASE_URL=http://192.168.1.100:8000/files

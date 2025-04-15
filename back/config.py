@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     # 并行处理限制
     MAX_CONCURRENT_TASKS: int = int(os.getenv("MAX_CONCURRENT_TASKS", "3"))
     # 临时文件存储路径
-    TEMP_DIR: str = os.getenv("TEMP_DIR", "")
+    TEMP_DIR: str = os.getenv("TEMP_DIR", "/mnt/hdd/docker/temp")
     # 下载超时设置(秒)
     DOWNLOAD_TIMEOUT: int = int(os.getenv("DOWNLOAD_TIMEOUT", "300"))
     # 处理超时设置(秒)
@@ -20,9 +20,9 @@ class Settings(BaseSettings):
     RETRY_DELAY: int = int(os.getenv("RETRY_DELAY", "2"))
 
     # ASR服务配置
-    ASR_API_BASE_URL: str = os.getenv("ASR_API_BASE_URL", "")
-    ASR_API_KEY: str = os.getenv("ASR_API_KEY", "")
-    ASR_MODEL: str = os.getenv("ASR_MODEL", "")
+    ASR_API_BASE_URL: str = os.getenv("ASR_API_BASE_URL", "http://192.168.22.104:9997/v1")
+    ASR_API_KEY: str = os.getenv("ASR_API_KEY", "not empty")
+    ASR_MODEL: str = os.getenv("ASR_MODEL", "SenseVoiceSmall")
 
     # 视频帧提取配置
     # FRAME_EXTRACT_START_MINUTES: int = int(os.getenv("FRAME_EXTRACT_START_MINUTES", "5"))  # 从第几分钟开始提取
@@ -30,6 +30,6 @@ class Settings(BaseSettings):
     # FRAME_EXTRACT_MAX_FRAMES: int = int(os.getenv("FRAME_EXTRACT_MAX_FRAMES", "8"))  # 最多提取几帧
 
     # 文件访问基础URL
-    FILE_ACCESS_BASE_URL: str = os.getenv("FILE_ACCESS_BASE_URL", "")
+    FILE_ACCESS_BASE_URL: str = os.getenv("FILE_ACCESS_BASE_URL", "http://192.168.22.103:8000/files")
 
 settings = Settings()

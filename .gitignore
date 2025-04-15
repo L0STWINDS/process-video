@@ -37,3 +37,4 @@ Thumbs.db
 
 # Docker相关
 .docker/
+docker-compose.yml

@@ -195,8 +195,8 @@ class VideoProcessor:
             logger.error(f"提取音频失败: {str(e)}")
             raise
     
-    async def _extract_frames(self, video_path, output_dir, start_minutes=5, interval_minutes=5, max_frames=8):
-        """从视频中提取帧，根据传入的起始时间、间隔和最大帧数"""
+    async def _extract_frames(self, video_path, output_dir, start_seconds=300, interval_seconds=300, max_frames=8):
+        """从视频中提取帧，根据传入的起始时间(秒)、间隔(秒)和最大帧数"""
         try:
             # 获取视频时长
             probe = await asyncio.get_event_loop().run_in_executor(
@@ -204,18 +204,14 @@ class VideoProcessor:
             )
             duration = float(probe['format']['duration'])
             
-            # 转换为秒
-            start_time = start_minutes * 60  # 转换为秒
-            interval = interval_minutes * 60  # 转换为秒
-            
-            logger.info(f"视频帧提取参数: 起始时间={start_time}秒, 间隔={interval}秒, 最大帧数={max_frames}")
+            logger.info(f"视频帧提取参数: 起始时间={start_seconds}秒, 间隔={interval_seconds}秒, 最大帧数={max_frames}")
             
             frame_times = []
-            current_time = start_time
+            current_time = start_seconds
             
             while current_time < duration and len(frame_times) < max_frames:
                 frame_times.append(current_time)
-                current_time += interval
+                current_time += interval_seconds
             
             # 提取帧
             for i, time_sec in enumerate(frame_times):
@@ -260,13 +256,13 @@ class VideoProcessor:
             logger.error(f"调用ASR服务失败: {str(e)}", exc_info=True)
             raise
     
-    async def process_video(self, url, start_minutes=5, interval_minutes=5, max_frames=8):
+    async def process_video(self, url, start_seconds=None, interval_seconds=None, max_frames=8):
         """处理视频的主函数
         
         Args:
             url: 视频URL
-            start_minutes: 从第几分钟开始提取帧，默认5分钟
-            interval_minutes: 每隔几分钟提取一帧，默认5分钟
+            start_seconds: 从第几秒开始提取帧，默认自动计算
+            interval_seconds: 每隔几秒提取一帧，默认自动计算
             max_frames: 最多提取几帧，默认8帧
             
         Returns:
@@ -284,8 +280,6 @@ class VideoProcessor:
                 "url": url,
                 "message": "任务已创建",
                 "frame_params": {
-                    "start_minutes": start_minutes,
-                    "interval_minutes": interval_minutes,
                     "max_frames": max_frames
                 },
                 "result": {}
@@ -311,13 +305,39 @@ class VideoProcessor:
                 await self._extract_audio(video_path, audio_path)
                 logger.info("音频提取完成")
                 
+                # 获取视频时长，用于自动计算参数
+                if start_seconds is None or interval_seconds is None:
+                    probe = await asyncio.get_event_loop().run_in_executor(
+                        None, lambda: ffmpeg.probe(video_path)
+                    )
+                    duration = float(probe['format']['duration'])
+                    
+                    # 自动计算参数
+                    calculated_interval = int(duration / (max_frames + 1))
+                    
+                    # 如果未提供参数，则使用计算值
+                    if start_seconds is None:
+                        start_seconds = calculated_interval
+                    if interval_seconds is None:
+                        interval_seconds = calculated_interval
+                    
+                    logger.info(f"视频时长: {duration}秒, 自动计算的间隔: {calculated_interval}秒")
+                
+                # 更新任务参数信息
+                tasks[task_id]["frame_params"].update({
+                    "start_seconds": start_seconds,
+                    "interval_seconds": interval_seconds,
+                    "video_duration": duration if 'duration' in locals() else None
+                })
+                self._save_task_to_disk(task_id, tasks[task_id])
+                
                 # 提取视频帧
                 logger.info(f"开始提取视频帧到目录: {frames_dir}")
                 frame_count = await self._extract_frames(
                     video_path, 
                     frames_dir, 
-                    start_minutes=start_minutes,
-                    interval_minutes=interval_minutes,
+                    start_seconds=start_seconds,
+                    interval_seconds=interval_seconds,
                     max_frames=max_frames
                 )
                 logger.info(f"视频帧提取完成，共提取 {frame_count} 帧")
