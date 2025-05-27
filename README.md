@@ -31,8 +31,9 @@ docker-compose up -d
 ```curl
 curl --request POST \
   --url http://127.0.0.1:8000/api/process-video \
-  --header 'Content-Type: application/json' \
-  --data '{
+  -H "Authorization: Bearer your-secret-api-key-here" \
+  -H 'Content-Type: application/json' \
+  -D '{
   "url": "http://127.0.0.1:5244/d/MP4/video.mp4",
   "start_seconds": "300",
   "interval_seconds": "300",
@@ -43,8 +44,9 @@ curl --request POST \
 ```curl
 curl --request POST \
   --url http://127.0.0.1:8000/api/process-video \
-  --header 'Content-Type: application/json' \
-  --data '{
+  -H "Authorization: Bearer your-secret-api-key-here" \
+  -H 'Content-Type: application/json' \
+  -D '{
   "url": "http://127.0.0.1:5244/d/MP4/video.mp4",
   "max_frames": "10"
 }'
