@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     MAX_RETRIES: int = int(os.getenv("MAX_RETRIES", "3"))
     RETRY_DELAY: int = int(os.getenv("RETRY_DELAY", "2"))
 
+    # API认证配置
+    API_KEY: str = os.getenv("API_KEY", "")
+
     # ASR服务配置
     ASR_API_BASE_URL: str = os.getenv("ASR_API_BASE_URL", "")
     ASR_API_KEY: str = os.getenv("ASR_API_KEY", "")

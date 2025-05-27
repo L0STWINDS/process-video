@@ -17,6 +17,8 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - TEMP_DIR=/app/temp
+      # API认证配置 - 请修改为你的API Key
+      - API_KEY=your-secret-api-key-here
       # 根据你的接口修改
       - ASR_API_BASE_URL=http://openai_api_server/v1
       - ASR_API_KEY=not empty

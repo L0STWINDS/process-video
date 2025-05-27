@@ -10,7 +10,7 @@ def create_app() -> FastAPI:
     """
     app = FastAPI(
         title="视频处理API", 
-        description="处理视频文件的REST API",
+        description="处理视频文件的REST API - 需要API Key认证",
         version="0.1.0"
     )
     
@@ -25,6 +25,6 @@ def create_app() -> FastAPI:
     
     @app.get("/")
     async def root():
-        return {"message": "视频处理API服务正常运行"}
+        return {"message": "视频处理API服务正常运行 - 需要API Key认证"}
     
     return app
